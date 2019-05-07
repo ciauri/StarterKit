@@ -28,12 +28,12 @@ struct SKService {
         self.container = container
     }
 
-    func clearDefaultZone(completion: @escaping (Result<Bool, Error>)->Void) {
+    func clearDefaultZone(completion: @escaping (Result<Void, Error>)->Void) {
         privateDatabase.delete(withRecordZoneID: .default) { (zoneID, error) in
             if let error = error {
                 return completion(.failure(error))
             } else {
-                return completion(.success(true))
+                return completion(.success(()))
             }
         }
     }

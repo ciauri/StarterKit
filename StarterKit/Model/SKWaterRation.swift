@@ -18,6 +18,12 @@ struct SKWaterRation: Codable {
     let encodedSystemFields: Data?
 }
 
+extension SKWaterRation {
+    init(amount: Measurement<UnitMass>, temperature: Measurement<UnitTemperature>) {
+        self.init(amount: amount, temperature: temperature, encodedSystemFields: nil)
+    }
+}
+
 // MARK: - CloudKit
 extension SKWaterRation: SKCloudKitRecord {
     enum RecordKey: String {

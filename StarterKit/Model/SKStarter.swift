@@ -21,6 +21,12 @@ struct SKStarter: Codable {
     let encodedSystemFields: Data?
 }
 
+extension SKStarter {
+    init(name: String, feedInterval: Int, birthday: Date? = .init(), birthplace: String? = nil) {
+        self.init(name: name, feedIntervalMinutes: feedInterval, birthday: birthday, birthplace: birthplace, encodedSystemFields: nil)
+    }
+}
+
 // MARK: - CloudKit
 extension SKStarter: SKCloudKitRecord {
     enum RecordKey: String {

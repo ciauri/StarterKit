@@ -13,9 +13,10 @@ class SKClient {
     let service: SKService = SKService()
     var starter: SKStarter?
     
-    static func initialize(completion: @escaping (Result<SKClient, SKError>)->Void) {
+    @discardableResult
+    static func initialize(completion: @escaping (Result<SKClient, SKError>)->Void) -> Operation {
         let client = SKClient(starter: nil)
-        client.fetchStarter { (result) in
+        return client.fetchStarter { (result) in
             switch result {
             case .success(let starter):
                 return completion(.success(SKClient(starter: starter)))
@@ -34,7 +35,8 @@ class SKClient {
         self.starter = starter
     }
     
-    func fetchStarter(completion: @escaping (Result<SKStarter, SKError>)->Void) {
+    @discardableResult
+    func fetchStarter(completion: @escaping (Result<SKStarter, SKError>)->Void) -> Operation {
         let query = CKQuery(recordType: SKStarter.recordType, predicate: NSPredicate(value: true))
         let operation = CKQueryOperation(query: query)
         operation.qualityOfService = .userInteractive
@@ -55,10 +57,11 @@ class SKClient {
             }
         }
         service.privateDatabase.add(operation)
+        return operation
     }
     
-    func putStarter(name: String, feedInterval: Int, birthday: Date?, birthplace: String?, completion: @escaping (Result<SKStarter, SKError>)->Void) {
-        let starter = SKStarter(name: name, feedIntervalMinutes: feedInterval, birthday: birthday, birthplace: birthplace, encodedSystemFields: nil)
+    @discardableResult
+    func put(_ starter: SKStarter, completion: @escaping (Result<SKStarter, SKError>)->Void) -> Operation {
         let operation = CKModifyRecordsOperation(recordsToSave: [starter.ckRecord], recordIDsToDelete: nil)
         operation.qualityOfService = .userInteractive
         operation.modifyRecordsCompletionBlock = {[weak self] savedRecords, deletedIds, error in
@@ -75,9 +78,11 @@ class SKClient {
             }
         }
         service.privateDatabase.add(operation)
+        return operation
     }
     
-    func feedStarter(meal: SKStarterMeal, completion: @escaping (Result<SKStarterMeal, SKError>)->Void) {
+    @discardableResult
+    func feedStarter(meal: SKStarterMeal, completion: @escaping (Result<SKStarterMeal, SKError>)->Void) -> Operation {
         let starterRef = CKRecord.Reference(record: starter!.ckRecord, action: .deleteSelf)
         let mealRecord = meal.ckRecord
         let mealRef = CKRecord.Reference(record: mealRecord, action: .deleteSelf)
@@ -104,5 +109,57 @@ class SKClient {
             }
         }
         service.privateDatabase.add(operation)
+        return operation
+    }
+    
+    @discardableResult
+    func fetchLastMeal(for starter: SKStarter, completion: @escaping (Result<SKStarterMeal, SKError>)->Void) -> Operation {
+        let predicate = NSPredicate(format: "owner == %@", starter.ckRecord)
+        let query = CKQuery(recordType: SKStarterMeal.recordType, predicate: predicate)
+        query.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+        let fetchMealOperation = CKQueryOperation(query: query)
+        fetchMealOperation.resultsLimit = 1
+        var mealRecord: CKRecord!
+        var flourRecords: [CKRecord] = []
+        var waterRecord: CKRecord!
+        
+        let aggregateOperation = BlockOperation {
+            guard let meal = mealRecord.skStarterMeal,
+                let water = waterRecord.skWaterRation else {
+                    return completion(.failure(.recordDoesNotExist))
+            }
+            let flour = flourRecords.compactMap({$0.skFlourRation})
+            let finalMeal = SKStarterMeal(date: meal.date, flourRations: flour, waterRation: water, encodedSystemFields: meal.encodedSystemFields)
+            return completion(.success(finalMeal))
+        }
+
+        fetchMealOperation.recordFetchedBlock = { record in
+            mealRecord = record
+        }
+        
+        fetchMealOperation.completionBlock = {
+            let fetchFlourPredicate = NSPredicate(format: "owner == %@", mealRecord)
+            let flourQuery = CKQuery(recordType: SKFlourRation.recordType, predicate: fetchFlourPredicate)
+            let flourOperation = CKQueryOperation(query: flourQuery)
+            flourOperation.recordFetchedBlock = { fetchedFlour in
+                flourRecords.append(fetchedFlour)
+            }
+            
+            let waterPredicate = NSPredicate(format: "owner == %@", mealRecord)
+            let waterQuery = CKQuery(recordType: SKWaterRation.recordType, predicate: waterPredicate)
+            let waterOperation = CKQueryOperation(query: waterQuery)
+            waterOperation.resultsLimit = 1
+            waterOperation.recordFetchedBlock = { record in
+                waterRecord = record
+            }
+            aggregateOperation.addDependency(flourOperation)
+            aggregateOperation.addDependency(waterOperation)
+            self.service.privateDatabase.add(flourOperation)
+            self.service.privateDatabase.add(waterOperation)
+            OperationQueue.main.addOperation(aggregateOperation)
+        }
+
+        service.privateDatabase.add(fetchMealOperation)
+        return aggregateOperation
     }
 }

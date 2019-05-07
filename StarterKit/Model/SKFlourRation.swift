@@ -19,6 +19,12 @@ struct SKFlourRation: Codable {
     let encodedSystemFields: Data?
 }
 
+extension SKFlourRation {
+    init(name: String, amount: Measurement<UnitMass>) {
+        self.init(flourName: name, amount: amount, encodedSystemFields: nil)
+    }
+}
+
 // MARK: - CloudKit
 extension SKFlourRation: SKCloudKitRecord {
     enum RecordKey: String {

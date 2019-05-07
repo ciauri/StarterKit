@@ -1,33 +1,32 @@
 //
-//  SKStarterMeal.swift
+//  SKStarterCheckIn.swift
 //  StarterKit
 //
-//  Created by Stephen Ciauri on 4/22/19.
+//  Created by Stephen Ciauri on 5/6/19.
 //  Copyright © 2019 Stephen Ciauri. All rights reserved.
 //
 
 import Foundation
 import CloudKit
 
-struct SKStarterMeal: Codable {
-    static let recordType = "StarterMeals"
+struct SKStarterCheckIn: Codable {
+    static let recordType = "StarterCheckIns"
     
     let date: Date
-    let flourRations: [SKFlourRation]?
-    let waterRation: SKWaterRation?
-
+    let remarks: String
+    
     // MARK: - CloudKit
     let encodedSystemFields: Data?
 }
 
-extension SKStarterMeal {
-    init(date: Date, flour: [SKFlourRation] = [], water: SKWaterRation?) {
-        self.init(date: date, flourRations: flour, waterRation: water, encodedSystemFields: nil)
+extension SKStarterCheckIn {
+    init(date: Date = .init(), remarks: String) {
+        self.init(date: date, remarks: remarks, encodedSystemFields: nil)
     }
 }
 
 // MARK: - CloudKit
-extension SKStarterMeal: SKCloudKitRecord {
+extension SKStarterCheckIn: SKCloudKitRecord {
     enum RecordKey: String {
         case date
     }
@@ -41,7 +40,7 @@ extension SKStarterMeal: SKCloudKitRecord {
 }
 
 extension CKRecord {
-    var skStarterMeal: SKStarterMeal? {
+    var skStarterCheckIn: SKStarterMeal? {
         guard
             let date = self[SKStarterMeal.RecordKey.date.rawValue] as? Date else {
                 return nil

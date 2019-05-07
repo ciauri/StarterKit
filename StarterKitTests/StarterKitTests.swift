@@ -14,8 +14,8 @@ class StarterKitTests: XCTestCase {
         let setupExpectation = expectation(description: "clear zone")
         SKService().clearDefaultZone { (result) in
             switch result {
-            case .success(let bool):
-                XCTAssert(bool)
+            case .success:
+                break
             default:
                 XCTFail()
             }
@@ -44,7 +44,8 @@ class StarterKitTests: XCTestCase {
         SKClient.initialize { (result) in
             switch result {
             case .success(let client):
-                client.putStarter(name: "yoloer", feedInterval: 360, birthday: Date(), birthplace: "Boston", completion: { (result) in
+                let starter = SKStarter(name: "yoloer", feedInterval: 360, birthplace: "Irvine")
+                client.put(starter) { (result) in
                     switch result {
                     case .success(let starter):
                         XCTAssertNotNil(starter)
@@ -52,7 +53,7 @@ class StarterKitTests: XCTestCase {
                         XCTFail(error.localizedDescription)
                     }
                     testExpectation.fulfill()
-                })
+                }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }
@@ -65,15 +66,16 @@ class StarterKitTests: XCTestCase {
         SKClient.initialize { (result) in
             switch result {
             case .success(let client):
-                client.putStarter(name: "yoloer", feedInterval: 360, birthday: Date(), birthplace: "Boston", completion: { (result) in
+                let starter = SKStarter(name: "yoloer", feedInterval: 360, birthplace: "Irvine")
+                client.put(starter) { (result) in
                     switch result {
                     case .success(let starter):
                         let water = SKWaterRation(amount: .init(value: 100, unit: .grams), temperature: .room, encodedSystemFields: nil)
-                        let flour = [SKFlourRation(flourName: "Wheat", amount: .init(value: 50, unit: .grams), encodedSystemFields: nil), SKFlourRation(flourName: "White", amount: .init(value: 50, unit: .grams), encodedSystemFields: nil)]
+                        let flour = [SKFlourRation(flourName: "Wheat", amount: .init(value: 50, unit: .grams), encodedSystemFields: nil), SKFlourRation(name: "White", amount: .init(value: 50, unit: .grams))]
                         let meal = SKStarterMeal(date: .init(), flourRations: flour, waterRation: water, encodedSystemFields: nil)
                         client.feedStarter(meal: meal, completion: { (result) in
                             switch result {
-                            case .success(let meal):
+                            case .success:
                                 XCTAssertTrue(true)
                             case .failure(let error):
                                 XCTFail(error.localizedDescription)
@@ -84,7 +86,48 @@ class StarterKitTests: XCTestCase {
                     case .failure(let error):
                         XCTFail(error.localizedDescription)
                     }
-                })
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        wait(for: [testExpectation], timeout: 10)
+    }
+    
+    func testFetchLastMeal() {
+        let testExpectation = expectation(description: "testFetchStarter")
+        SKClient.initialize { (result) in
+            switch result {
+            case .success(let client):
+                let starter = SKStarter(name: "yoloer", feedInterval: 360, birthplace: "Irvine")
+                client.put(starter) { (result) in
+                    switch result {
+                    case .success(let starter):
+                        let water = SKWaterRation(amount: .init(value: 100, unit: .grams), temperature: .room, encodedSystemFields: nil)
+                        let flour = [SKFlourRation(flourName: "Wheat", amount: .init(value: 50, unit: .grams), encodedSystemFields: nil), SKFlourRation(name: "White", amount: .init(value: 50, unit: .grams))]
+                        let meal = SKStarterMeal(date: .init(), flourRations: flour, waterRation: water, encodedSystemFields: nil)
+                        client.feedStarter(meal: meal, completion: { (result) in
+                            switch result {
+                            case .success:
+                                XCTAssertTrue(true)
+                                client.fetchLastMeal(for: starter, completion: { (result) in
+                                    switch result {
+                                    case .success(let fetchedMeal):
+                                        break
+                                    case .failure(let error):
+                                        XCTFail(error.localizedDescription)
+                                    }
+                                    testExpectation.fulfill()
+                                })
+                            case .failure(let error):
+                                XCTFail(error.localizedDescription)
+                            }
+                        })
+                        XCTAssertNotNil(starter)
+                    case .failure(let error):
+                        XCTFail(error.localizedDescription)
+                    }
+                }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }
@@ -99,15 +142,16 @@ class StarterKitTests: XCTestCase {
         SKClient.initialize { (result) in
             switch result {
             case .success(let client):
-                client.putStarter(name: "yoloer", feedInterval: 360, birthday: Date(), birthplace: "Boston", completion: { (result) in
+                let starter = SKStarter(name: "yoloer", feedInterval: 360, birthplace: "Irvine")
+                client.put(starter) { (result) in
                     switch result {
                     case .success(let starter):
                         XCTAssertNotNil(starter)
                         let service = SKService()
                         service.clearDefaultZone { (result) in
                             switch result {
-                            case .success(let boolResult):
-                                XCTAssert(boolResult)
+                            case .success:
+                                break
                             case .failure(let error):
                                 XCTFail(error.localizedDescription)
                             }
@@ -129,7 +173,7 @@ class StarterKitTests: XCTestCase {
                     case .failure(let error):
                         XCTFail(error.localizedDescription)
                     }
-                })
+                }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }

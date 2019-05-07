@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C92B01F228138FC0075ACB7 /* SKStarterCheckIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C92B01E228138FC0075ACB7 /* SKStarterCheckIn.swift */; };
+		9C92B021228139D90075ACB7 /* SKImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C92B020228139D90075ACB7 /* SKImage.swift */; };
 		9CAFF7F6226EA671007390CB /* StarterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CAFF7EC226EA671007390CB /* StarterKit.framework */; };
 		9CAFF7FB226EA671007390CB /* StarterKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAFF7FA226EA671007390CB /* StarterKitTests.swift */; };
 		9CAFF7FD226EA671007390CB /* StarterKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CAFF7EF226EA671007390CB /* StarterKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -43,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9C92B01E228138FC0075ACB7 /* SKStarterCheckIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKStarterCheckIn.swift; sourceTree = "<group>"; };
+		9C92B020228139D90075ACB7 /* SKImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKImage.swift; sourceTree = "<group>"; };
 		9CAFF7EC226EA671007390CB /* StarterKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StarterKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CAFF7EF226EA671007390CB /* StarterKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StarterKit.h; sourceTree = "<group>"; };
 		9CAFF7F0226EA671007390CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -139,9 +143,11 @@
 			isa = PBXGroup;
 			children = (
 				9CAFF806226EA6C6007390CB /* SKStarter.swift */,
+				9C92B01E228138FC0075ACB7 /* SKStarterCheckIn.swift */,
 				9CAFF809226EA741007390CB /* SKStarterMeal.swift */,
 				9CAFF80D226EA85D007390CB /* SKFlourRation.swift */,
 				9CAFF811226EAA48007390CB /* SKWaterRation.swift */,
+				9C92B020228139D90075ACB7 /* SKImage.swift */,
 				9CAFF80B226EA787007390CB /* SKTypes.swift */,
 			);
 			path = Model;
@@ -331,9 +337,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CAFF812226EAA48007390CB /* SKWaterRation.swift in Sources */,
+				9C92B01F228138FC0075ACB7 /* SKStarterCheckIn.swift in Sources */,
 				9CAFF80A226EA741007390CB /* SKStarterMeal.swift in Sources */,
 				9CAFF830226EB6A4007390CB /* SKClient.swift in Sources */,
 				9CAFF833226EB765007390CB /* SKService.swift in Sources */,
+				9C92B021228139D90075ACB7 /* SKImage.swift in Sources */,
 				9CAFF80E226EA85D007390CB /* SKFlourRation.swift in Sources */,
 				9CAFF807226EA6C6007390CB /* SKStarter.swift in Sources */,
 				9CAFF80C226EA787007390CB /* SKTypes.swift in Sources */,
