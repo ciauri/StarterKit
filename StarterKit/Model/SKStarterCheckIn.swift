@@ -9,7 +9,7 @@
 import Foundation
 import CloudKit
 
-struct SKStarterCheckIn: Codable {
+struct SKStarterCheckIn: Codable, SKStarterTimelineEntry {
     static let recordType = "StarterCheckIns"
     
     let date: Date
@@ -29,22 +29,24 @@ extension SKStarterCheckIn {
 extension SKStarterCheckIn: SKCloudKitRecord {
     enum RecordKey: String {
         case date
+        case remarks
     }
     
     var ckRecord: CKRecord {
         let record = decodedRecord
         record[RecordKey.date.rawValue] = date
-        
+        record[RecordKey.remarks.rawValue] = remarks
         return record
     }
 }
 
 extension CKRecord {
-    var skStarterCheckIn: SKStarterMeal? {
+    var skStarterCheckIn: SKStarterCheckIn? {
         guard
-            let date = self[SKStarterMeal.RecordKey.date.rawValue] as? Date else {
+            let date = self[SKStarterCheckIn.RecordKey.date.rawValue] as? Date,
+            let remarks = self[SKStarterCheckIn.RecordKey.remarks.rawValue] as? String else {
                 return nil
         }
-        return SKStarterMeal(date: date, flourRations: nil, waterRation: nil, encodedSystemFields: encodedSystemFields)
+        return SKStarterCheckIn(date: date, remarks: remarks, encodedSystemFields: encodedSystemFields)
     }
 }

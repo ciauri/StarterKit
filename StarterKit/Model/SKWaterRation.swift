@@ -9,7 +9,7 @@
 import Foundation
 import CloudKit
 
-struct SKWaterRation: Codable {
+struct SKWaterRation: Codable, Equatable {
     static let recordType = "WaterRations"
 
     let amount: Measurement<UnitMass>

@@ -21,6 +21,10 @@ protocol SKCloudKitRecord {
     var ckRecord: CKRecord { get }
 }
 
+protocol SKStarterTimelineEntry {
+    var date: Date { get }
+}
+
 extension SKCloudKitRecord {
     var decodedRecord: CKRecord {
         var record: CKRecord

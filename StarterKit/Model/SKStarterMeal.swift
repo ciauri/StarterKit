@@ -9,20 +9,21 @@
 import Foundation
 import CloudKit
 
-struct SKStarterMeal: Codable {
+struct SKStarterMeal: Codable, SKStarterTimelineEntry {
     static let recordType = "StarterMeals"
     
     let date: Date
     let flourRations: [SKFlourRation]?
     let waterRation: SKWaterRation?
+    let image: SKImage?
 
     // MARK: - CloudKit
     let encodedSystemFields: Data?
 }
 
 extension SKStarterMeal {
-    init(date: Date, flour: [SKFlourRation] = [], water: SKWaterRation?) {
-        self.init(date: date, flourRations: flour, waterRation: water, encodedSystemFields: nil)
+    init(date: Date, flour: [SKFlourRation] = [], water: SKWaterRation? = nil, image: SKImage? = nil) {
+        self.init(date: date, flourRations: flour, waterRation: water, image: image, encodedSystemFields: nil)
     }
 }
 
@@ -46,6 +47,6 @@ extension CKRecord {
             let date = self[SKStarterMeal.RecordKey.date.rawValue] as? Date else {
                 return nil
         }
-        return SKStarterMeal(date: date, flourRations: nil, waterRation: nil, encodedSystemFields: encodedSystemFields)
+        return SKStarterMeal(date: date, flourRations: nil, waterRation: nil, image: nil, encodedSystemFields: encodedSystemFields)
     }
 }
