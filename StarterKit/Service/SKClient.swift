@@ -141,26 +141,18 @@ class SKClient {
         let checkInRecord = checkIn.ckRecord
         checkInRecord["owner"] = starterRef
         
-        let operation = CKModifyRecordsOperation(recordsToSave: [checkInRecord], recordIDsToDelete: nil)
-        operation.qualityOfService = .userInteractive
-        operation.modifyRecordsCompletionBlock = { savedRecords, deletedIds, error in
-            if let error = error {
-                return completion(.failure(.native(error)))
-            } else {
-                let checkIns = savedRecords?.compactMap({$0.skStarterCheckIn})
-                if let checkIn = checkIns?.first {
-                    return completion(.success(checkIn))
-                } else {
-                    return completion(.failure(.recordDoesNotExist))
-                }
+        return execute(checkInRecords: [checkInRecord], completion: { (result) in
+            switch result {
+            case .success(let records):
+                return completion(.success(records.first!))
+            case .failure(let error):
+                return completion(.failure(error))
             }
-        }
-        service.privateDatabase.add(operation)
-        return operation
+        })
     }
     
     @discardableResult
-    func checkInStarter(checkIns: [SKStarterCheckIn], completion: @escaping (Result<SKStarterCheckIn, SKError>)->Void) -> Operation {
+    func checkInStarter(checkIns: [SKStarterCheckIn], completion: @escaping (Result<[SKStarterCheckIn], SKError>)->Void) -> Operation {
         let starterRef = CKRecord.Reference(record: starter!.ckRecord, action: .deleteSelf)
         var checkInRecords: [CKRecord] = []
         for checkIn in checkIns {
@@ -169,15 +161,18 @@ class SKClient {
             checkInRecords.append(checkInRecord)
         }
         
+        return execute(checkInRecords: checkInRecords, completion: completion)
+    }
+    
+    private func execute(checkInRecords: [CKRecord], completion: @escaping (Result<[SKStarterCheckIn], SKError>)->Void) -> Operation {
         let operation = CKModifyRecordsOperation(recordsToSave: checkInRecords, recordIDsToDelete: nil)
         operation.qualityOfService = .userInteractive
         operation.modifyRecordsCompletionBlock = { savedRecords, deletedIds, error in
             if let error = error {
                 return completion(.failure(.native(error)))
             } else {
-                let checkIns = savedRecords?.compactMap({$0.skStarterCheckIn})
-                if let checkIn = checkIns?.first {
-                    return completion(.success(checkIn))
+                if let checkIns = savedRecords?.compactMap({$0.skStarterCheckIn}) {
+                    return completion(.success(checkIns))
                 } else {
                     return completion(.failure(.recordDoesNotExist))
                 }
@@ -361,9 +356,14 @@ class SKClient {
             mealRecords.append(record)
         }
         
-        fetchMealOperation.completionBlock = {
-            return completion(.success(mealRecords.compactMap({$0.skStarterMeal})))
+        fetchMealOperation.queryCompletionBlock = { cursor, error in
+            if let error = error {
+                return completion(.failure(.native(error)))
+            } else {
+                return completion(.success(mealRecords.compactMap({$0.skStarterMeal})))
+            }
         }
+
         
         dependencies.forEach({fetchMealOperation.addDependency($0)})
         service.privateDatabase.add(fetchMealOperation)
