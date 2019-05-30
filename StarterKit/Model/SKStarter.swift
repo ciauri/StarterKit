@@ -9,20 +9,20 @@
 import Foundation
 import CloudKit
 
-struct SKStarter: Codable {
+public struct SKStarter: Codable {
     static let recordType = "Starters"
     
-    let name: String
-    let feedIntervalMinutes: Int
-    let birthday: Date?
-    let birthplace: String?
+    public let name: String
+    public let feedIntervalMinutes: Int
+    public let birthday: Date?
+    public let birthplace: String?
     
     // MARK: - CloudKit
     let encodedSystemFields: Data?
 }
 
 extension SKStarter {
-    init(name: String, feedInterval: Int, birthday: Date? = .init(), birthplace: String? = nil) {
+    public init(name: String, feedInterval: Int, birthday: Date? = .init(), birthplace: String? = nil) {
         self.init(name: name, feedIntervalMinutes: feedInterval, birthday: birthday, birthplace: birthplace, encodedSystemFields: nil)
     }
 }

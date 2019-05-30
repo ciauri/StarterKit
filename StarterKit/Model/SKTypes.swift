@@ -9,7 +9,7 @@
 import Foundation
 import CloudKit
 
-enum SKError: LocalizedError {
+public enum SKError: LocalizedError {
     case cloudKitUnavailable
     case recordDoesNotExist
     case native(Error)

@@ -42,6 +42,13 @@
 			remoteGlobalIDString = 9CAFF816226EB249007390CB;
 			remoteInfo = UnitTestHostApplication;
 		};
+		9CE49A67229F6B9500F733D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9CE49A63229F6B9400F733D7 /* Sourdo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9CE49A4E229F6B9400F733D7;
+			remoteInfo = Sourdo;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +76,7 @@
 		9CAFF82D226EB29C007390CB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		9CAFF82F226EB6A4007390CB /* SKClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKClient.swift; sourceTree = "<group>"; };
 		9CAFF832226EB765007390CB /* SKService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKService.swift; sourceTree = "<group>"; };
+		9CE49A63229F6B9400F733D7 /* Sourdo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sourdo.xcodeproj; path = Sourdo/Sourdo.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +109,7 @@
 		9CAFF7E2226EA671007390CB = {
 			isa = PBXGroup;
 			children = (
+				9CE49A63229F6B9400F733D7 /* Sourdo.xcodeproj */,
 				9CAFF7EE226EA671007390CB /* StarterKit */,
 				9CAFF7F9226EA671007390CB /* StarterKitTests */,
 				9CAFF818226EB249007390CB /* UnitTestHostApplication */,
@@ -182,6 +191,14 @@
 				9CAFF832226EB765007390CB /* SKService.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		9CE49A64229F6B9400F733D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9CE49A68229F6B9500F733D7 /* Sourdo.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +312,12 @@
 			mainGroup = 9CAFF7E2226EA671007390CB;
 			productRefGroup = 9CAFF7ED226EA671007390CB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9CE49A64229F6B9400F733D7 /* Products */;
+					ProjectRef = 9CE49A63229F6B9400F733D7 /* Sourdo.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				9CAFF7EB226EA671007390CB /* StarterKit */,
@@ -303,6 +326,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		9CE49A68229F6B9500F733D7 /* Sourdo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Sourdo.app;
+			remoteRef = 9CE49A67229F6B9500F733D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9CAFF7EA226EA671007390CB /* Resources */ = {
@@ -627,7 +660,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ciauri.sourdo.UnitTestHostApplication;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ciauri.stephen.Sourdo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -646,7 +679,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ciauri.sourdo.UnitTestHostApplication;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ciauri.stephen.Sourdo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -9,12 +9,12 @@
 import Foundation
 import CloudKit
 
-class SKClient {
+public class SKClient {
     let service: SKService = SKService()
-    var starter: SKStarter?
+    public var starter: SKStarter?
     
     @discardableResult
-    static func initialize(completion: @escaping (Result<SKClient, SKError>)->Void) -> Operation {
+    public static func initialize(completion: @escaping (Result<SKClient, SKError>)->Void) -> Operation {
         let client = SKClient(starter: nil)
         return client.fetchStarter { (result) in
             switch result {
@@ -36,7 +36,7 @@ class SKClient {
     }
     
     @discardableResult
-    func fetchStarter(completion: @escaping (Result<SKStarter, SKError>)->Void) -> Operation {
+    public func fetchStarter(completion: @escaping (Result<SKStarter, SKError>)->Void) -> Operation {
         let query = CKQuery(recordType: SKStarter.recordType, predicate: NSPredicate(value: true))
         let operation = CKQueryOperation(query: query)
         operation.qualityOfService = .userInteractive
@@ -61,7 +61,12 @@ class SKClient {
     }
     
     @discardableResult
-    func put(_ starter: SKStarter, completion: @escaping (Result<SKStarter, SKError>)->Void) -> Operation {
+    public func fetchStarters(completion: @escaping (Result<[SKStarter], SKError>)->Void) -> Operation {
+        
+    }
+    
+    @discardableResult
+    public func put(_ starter: SKStarter, completion: @escaping (Result<SKStarter, SKError>)->Void) -> Operation {
         let operation = CKModifyRecordsOperation(recordsToSave: [starter.ckRecord], recordIDsToDelete: nil)
         operation.qualityOfService = .userInteractive
         operation.modifyRecordsCompletionBlock = {[weak self] savedRecords, deletedIds, error in
